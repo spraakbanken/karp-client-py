@@ -1,0 +1,15 @@
+[project]
+name = "karp-api-client"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Språkbanken Text", email = "sb-info@svenska.gu.se" },
+    { name = "Kristoffer Andersson", email = "kristoffer.andersson@gu.se" },
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

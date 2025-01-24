@@ -8,9 +8,7 @@ authors = [
     { name = "Kristoffer Andersson", email = "kristoffer.andersson@gu.se" },
 ]
 requires-python = ">=3.10"
-dependencies = [
-    "httpx>=0.28.1",
-]
+dependencies = ["attrs>=24.3.0", "httpx>=0.28.1", "returns>=0.23.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -18,6 +16,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "anyio>=4.8.0",
     "mypy>=1.14.1",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.2",

@@ -1,6 +1,7 @@
+from karp_api_client.dsl.query import Equals
 from returns.result import Failure, Success
 
-from karp_api_client import Client
+from karp_api_client import Client, dsl
 from karp_api_client.api.querying import query
 from karp_api_client.models.query_response import QueryResponse
 
@@ -9,10 +10,13 @@ def main():
     client = Client()
 
     with client as client:
+        q = dsl.Equals(field="baseform", needle="agha") || dsl.Equals(field="baseform",needle="agin")
         response = query.sync(
             client,
-            "ao",
-            query_options=query.QueryOptions(size=5, lexicon_stats=True),
+            "schlyter,soederwall,soederwall-supp",
+            query_options=query.QueryOptions(
+                size=25, q="or(equals|baseform|agha||equals|baseform|agin)"
+            ),
         )
         match response:
             case Success(resp):

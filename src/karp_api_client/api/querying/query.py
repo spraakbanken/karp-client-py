@@ -87,6 +87,7 @@ def _get_query_kwargs(
         _resources = resources
     else:
         _resources = ",".join(resources)
+
     qs = "" if query_options is None else query_options.to_query_string()
     url = f"/query/{_resources}{'?' if qs else ''}{qs}"
 

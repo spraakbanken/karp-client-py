@@ -1,4 +1,3 @@
-from karp_api_client.dsl.query import Equals
 from returns.result import Failure, Success
 
 from karp_api_client import Client, dsl
@@ -10,7 +9,9 @@ def main():
     client = Client()
 
     with client as client:
-        q = dsl.Equals(field="baseform", needle="agha") || dsl.Equals(field="baseform",needle="agin")
+        q = dsl.Equals(field="baseform", value="agha") | dsl.Equals(
+            field="baseform", value="agin"
+        )
         response = query.sync(
             client,
             "schlyter,soederwall,soederwall-supp",

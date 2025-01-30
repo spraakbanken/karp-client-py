@@ -44,14 +44,17 @@ class Query:
 class Equals(Query):
     _param_defs = {
         "field": {"type": "query", "multi": False},
-        "needle": {"type": "query", "multi": False},
+        "value": {"type": "query", "multi": False},
     }
 
-    def __init__(self, *, field: str, needle: str) -> None:
+    def __init__(self, *, field: str, value: str) -> None:
         super().__init__(
             field=field,
-            needle=needle,
+            value=value,
         )
+
+    def to_query_string(self) -> str:
+        return f"equals|{self.field}|{self.value}"
 
 
 class Or(Query):
@@ -67,3 +70,7 @@ class Or(Query):
         else:
             q.ors.append(other)
         return q
+
+    def to_query_string(self) -> str:
+        queries = "||".join((q.to_query_string() for q in self.ors))
+        return f"or({queries})"

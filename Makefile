@@ -57,8 +57,8 @@ help:
 	@echo ""
 
 PLATFORM := `uname -o`
-REPO := "<REPO-NAME-HERE>"
-PROJECT_SRC := "<SRC-FOLDER-HERE>"
+REPO := spraakbanken/karp-api-client-py
+PROJECT_SRC := src/karp-api-client-py
 
 ifeq (${VIRTUAL_ENV},)
   VENV_NAME = .venv

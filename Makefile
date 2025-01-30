@@ -58,7 +58,7 @@ help:
 
 PLATFORM := `uname -o`
 REPO := spraakbanken/karp-api-client-py
-PROJECT_SRC := src/karp-api-client-py
+PROJECT_SRC := src/karp_api_client
 
 ifeq (${VIRTUAL_ENV},)
   VENV_NAME = .venv

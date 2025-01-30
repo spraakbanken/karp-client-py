@@ -1,18 +1,42 @@
+from typing import TypeVar
+
+import anyio
+from returns.interfaces.specific.ioresult import IOResultLike2
 from returns.result import Failure, Success
 
 from karp_api_client import Client, dsl
 from karp_api_client.api import querying
 from karp_api_client.models.query_response import QueryResponse
 
+_IoKind = TypeVar("_IoKind", bound=IOResultLike2)
 
-def main():
+
+# @kinded
+# def _query(
+#     client_get: Callable[[str], Kind2[_IoKind, httpx.Response, Exception]],
+#     url: str,
+# ) -> Kind2[_IoKind, dict[str, Any], Exception]:
+#     return client_get(url).map(lambda response: response.json())
+
+
+# if __name__ == "__main__":
+#     client = Client()
+#     result_future = _query(
+#         future_safe(client.get_async_client().get),
+#         "https://spraakbanken4.it.gu.se/karp/v7/query/ao",
+#     )
+#     query_result = anyio.run(result_future.awaitable)
+#     print(query_result)
+
+
+async def main():
     client = Client()
 
-    with client as client:
+    async with client as client:
         q = dsl.Equals(field="baseform", value="agha") | dsl.Equals(
             field="baseform", value="agin"
         )
-        response = querying.query_sync(
+        response = await querying.query_async(
             "schlyter,soederwall,soederwall-supp",
             client=client,
             query_options=querying.QueryOptions(size=25, q=q),
@@ -37,4 +61,4 @@ def _print_table(response: QueryResponse | None) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    anyio.run(main)

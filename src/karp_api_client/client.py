@@ -73,7 +73,7 @@ class ClientBase:
             self._async_client.timeout = timeout
         return attrs.evolve(self, timeout=timeout)
 
-    def set_httpx_client(self, client: httpx.Client) -> Self:
+    def set_sync_client(self, client: httpx.Client) -> Self:
         """Manually set the underlying httpx.Client
 
         **NOTE**: This will override any other settings on the client, including cookies, headers, and timeout.
@@ -108,7 +108,7 @@ class ClientBase:
         """Exit a context manager for internal httpx.Client (see httpx docs)"""
         self.get_sync_client().__exit__(*args, **kwargs)
 
-    def set_async_httpx_client(self, async_client: httpx.AsyncClient) -> Self:
+    def set_async_client(self, async_client: httpx.AsyncClient) -> Self:
         """Manually the underlying httpx.AsyncClient
 
         **NOTE**: This will override any other settings on the client, including cookies, headers, and timeout.
@@ -135,12 +135,12 @@ class ClientBase:
 
     async def __aenter__(self) -> Self:
         """Enter a context manager for underlying httpx.AsyncClient—you cannot enter twice (see httpx docs)"""
-        await self.get_async_httpx_client().__aenter__()
+        await self.get_async_client().__aenter__()
         return self
 
     async def __aexit__(self, *args: Any, **kwargs: Any) -> None:
         """Exit a context manager for underlying httpx.AsyncClient (see httpx docs)"""
-        await self.get_async_httpx_client().__aexit__(*args, **kwargs)
+        await self.get_async_client().__aexit__(*args, **kwargs)
 
 
 @attrs.define(slots=False)

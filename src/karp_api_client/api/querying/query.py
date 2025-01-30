@@ -6,19 +6,15 @@ import attrs
 import httpx
 from returns.result import Failure, Result, Success
 
-from karp_api_client import AuthenticatedClient, Client, errors
+from karp_api_client import AuthenticatedClient, Client, dsl, errors
 from karp_api_client.models.http_validation_error import HttpValidationError
 from karp_api_client.models.query_response import QueryResponse
 from karp_api_client.types import Response
 
 
 @attrs.define
-class QueryDsl: ...
-
-
-@attrs.define
 class QueryOptions:
-    q: Optional[str] = attrs.field(default=None)
+    q: Optional[Union[str, dsl.Query]] = attrs.field(default=None)
     from_: Optional[int] = attrs.field(default=None)
     size: Optional[int] = attrs.field(default=None)
     sort: Optional[list[str]] = attrs.field(default=None)
@@ -29,7 +25,7 @@ class QueryOptions:
     def to_query_string(self) -> str:
         d: dict[str, Union[int, str]] = {}
         if self.q:
-            d["q"] = self.q
+            d["q"] = str(self.q)
         if self.from_:
             d["from"] = self.from_
         if self.size:
@@ -48,10 +44,10 @@ class QueryOptions:
         return ""
 
 
-def sync(
-    client: Union[Client, AuthenticatedClient],
+def query_sync(
     resources: Union[str, Sequence[str]],
     *,
+    client: Union[Client, AuthenticatedClient],
     query_options: QueryOptions | None = None,
 ) -> Result[Response[QueryResponse], Response[HttpValidationError | None]]:
     """Query.
@@ -59,7 +55,7 @@ def sync(
 
     Args:
         resources : sequence of resources as strings, or as a commas-separatade string.
-        q : the optional query string
+        query_options : optional query options
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -74,6 +70,36 @@ def sync(
     )
     print(f"{kwargs=}")
     response = client.get_sync_client().request(**kwargs)
+
+    return _build_query_response(client=client, response=response)
+
+
+async def query_async(
+    resources: Union[str, Sequence[str]],
+    *,
+    client: Union[Client, AuthenticatedClient],
+    query_options: QueryOptions | None = None,
+) -> Result[Response[QueryResponse], Response[HttpValidationError | None]]:
+    """Query.
+
+
+    Args:
+        resources : sequence of resources as strings, or as a commas-separatade string.
+        query_options : optional query options
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Response[Union[EntryAddResponse, HttpValidationError]]
+    """
+    kwargs = _get_query_kwargs(
+        resources=resources,
+        query_options=query_options,
+    )
+    print(f"{kwargs=}")
+    response = await client.get_async_client().request(**kwargs)
 
     return _build_query_response(client=client, response=response)
 

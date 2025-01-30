@@ -42,6 +42,11 @@ class Query:
 
 
 class Equals(Query):
+    """Find all entries where the `field` equals `value`.
+
+    Stricter than `contains`.
+    """
+
     _param_defs = {
         "field": {"type": "query", "multi": False},
         "value": {"type": "query", "multi": False},
@@ -53,11 +58,13 @@ class Equals(Query):
             value=value,
         )
 
-    def to_query_string(self) -> str:
+    def __str__(self) -> str:
         return f"equals|{self.field}|{self.value}"
 
 
 class Or(Query):
+    """Find all entries that matches any of the queries."""
+
     _param_defs = {"ors": {"type": "query", "multi": True}}
 
     def __init__(self, first: Query, second: Query) -> None:
@@ -71,6 +78,6 @@ class Or(Query):
             q.ors.append(other)
         return q
 
-    def to_query_string(self) -> str:
-        queries = "||".join((q.to_query_string() for q in self.ors))
+    def __str__(self) -> str:
+        queries = "||".join((str(q) for q in self.ors))
         return f"or({queries})"

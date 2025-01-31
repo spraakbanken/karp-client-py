@@ -2,7 +2,7 @@
 
 import copy
 from collections.abc import Callable
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Union
 
 try:
     from typing import Self  # type: ignore [attr-defined]
@@ -13,7 +13,7 @@ except ImportError:
 class Query:
     """Base class for all queries."""
 
-    _param_defs: ClassVar[dict[str, dict[str, str | bool]]] = {}
+    _param_defs: ClassVar[dict[str, dict[str, Union[str, bool]]]] = {}
 
     def __init__(self, **params: Any) -> None:
         """Construct a Query."""
@@ -57,7 +57,7 @@ class Equals(Query):
     Stricter than `contains`.
     """
 
-    _param_defs: ClassVar[dict[str, dict[str, str | bool]]] = {
+    _param_defs: ClassVar[dict[str, dict[str, Union[str, bool]]]] = {
         "field": {"type": "query", "multi": False},
         "value": {"type": "query", "multi": False},
     }
@@ -77,7 +77,7 @@ class Equals(Query):
 class Or(Query):
     """Find all entries that matches any of the queries."""
 
-    _param_defs: ClassVar[dict[str, dict[str, str | bool]]] = {"ors": {"type": "query", "multi": True}}
+    _param_defs: ClassVar[dict[str, dict[str, Union[str, bool]]]] = {"ors": {"type": "query", "multi": True}}
 
     def __init__(self, first: Query, second: Query) -> None:
         """Construct an Or query by combining two queries."""

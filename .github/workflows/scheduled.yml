@@ -42,7 +42,7 @@ jobs:
         run: make test
   update:
     runs-on: ubuntu-latest
-    name: ubuntu / 3.12 / updates work
+    name: ubuntu / 3.13 / updates work
     steps:
       - uses: actions/checkout@v4
         with:
@@ -53,11 +53,11 @@ jobs:
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
-      - name: Install 3.12
+      - name: Install 3.13
         if: hashFiles('uv.lock') != ''
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
       - name: uv sync --dev --upgrade
         if: hashFiles('uv.lock') != ''
         run: uv sync --dev --upgrade --all-packages --all-extras

@@ -9,7 +9,7 @@ workflows: check: {
 	}
 	permissions: contents: "read"
 	env: {
-		MINIMUM_PYTHON_VERSION: "3.9"
+		MINIMUM_PYTHON_VERSION: "\(_min_py_version)"
 		UV_VERSION:             "0.5.15"
 	}
 
@@ -22,7 +22,7 @@ workflows: check: {
 	jobs: {
 		fmt: {
 			"runs-on": "ubuntu-latest"
-			name:      "ubuntu / 3.9 / fmt"
+			name:      "ubuntu / \(_min_py_version) / fmt"
 			steps: [{
 				uses: "actions/checkout@v4"
 				with: submodules: true
@@ -52,7 +52,7 @@ workflows: check: {
 		}
 		lint: {
 			"runs-on": "ubuntu-latest"
-			name:      "ubuntu / 3.9 / lint"
+			name:      "ubuntu / \(_min_py_version) / lint"
 			steps: [{
 				uses: "actions/checkout@v4"
 				with: submodules: true
@@ -82,7 +82,7 @@ workflows: check: {
 		}
 		"type-check": {
 			"runs-on": "ubuntu-latest"
-			name:      "ubuntu / 3.9 / type-check"
+			name:      "ubuntu / \(_min_py_version) / type-check"
 			steps: [{
 				uses: "actions/checkout@v4"
 				with: submodules: true

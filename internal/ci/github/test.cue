@@ -13,7 +13,7 @@ workflows: test: {
 	}
 	permissions: contents: "read"
 	env: {
-		MINIMUM_PYTHON_VERSION: "3.9"
+		MINIMUM_PYTHON_VERSION: "\(_min_py_version)"
 		UV_VERSION:             "0.5.15"
 	}
 	jobs: {
@@ -29,12 +29,10 @@ workflows: test: {
 				matrix: {
 					os: ["ubuntu"]
 					"python-version": [
-						// remove the unused versions
-						"3.9",
-						"3.10",
-						"3.11",
-						"3.12",
-						"3.13",
+						for minor in _py_versions
+						if minor >= _min_py {
+							"3.\(minor)"
+						},
 					]
 				}
 			}
@@ -84,7 +82,7 @@ workflows: test: {
 			// This action runs doctests for coverage collection and uploads them to codecov.io.
 			// This requires the secret `CODECOV_TOKEN` be set as secret on GitHub, both for
 			// Actions and Dependabot
-			name: "${{ matrix.os }} / 3.9 / doctest"
+			name: "${{ matrix.os }} / \(_min_py_version) / doctest"
 			strategy: {
 				"max-parallel": 4
 				"fail-fast":    false
@@ -144,7 +142,7 @@ workflows: test: {
 			// method was added after this version).
 			//
 			"runs-on": "ubuntu-latest"
-			name:      "ubuntu / 3.9 / minimal-versions"
+			name:      "ubuntu / \(_min_py_version) / minimal-versions"
 			steps: [{
 				uses: "actions/checkout@v4"
 				with: submodules: true

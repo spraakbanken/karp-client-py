@@ -2,7 +2,7 @@
 
 from collections.abc import MutableMapping
 from http import HTTPStatus
-from typing import Generic, Literal, TypeVar
+from typing import Generic, Literal, Optional, TypeVar
 
 import attrs
 
@@ -29,7 +29,7 @@ class Response(Generic[T]):
     status_code: HTTPStatus
     content: bytes
     headers: MutableMapping[str, str]
-    parsed: T | None
+    parsed: Optional[T]
 
 
 __all__ = ["Response"]

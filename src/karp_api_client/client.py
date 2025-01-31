@@ -3,7 +3,7 @@
 import os
 import ssl
 import typing
-from typing import Any, TypeVar
+from typing import Any, Optional, TypeVar, Union
 
 try:
     from typing import Self  # type: ignore [attr-defined]
@@ -37,12 +37,12 @@ class ClientBase:
     _base_url: str = attrs.field(default="https://spraakbanken4.it.gu.se/karp/v7", alias="base_url")
     _cookies: dict[str, str] = attrs.field(factory=dict, kw_only=True, alias="cookies")
     _headers: dict[str, str] = attrs.field(factory=dict, kw_only=True, alias="headers")
-    _timeout: httpx.Timeout | None = attrs.field(default=None, kw_only=True, alias="timeout")
-    _verify_ssl: str | bool | ssl.SSLContext = attrs.field(default=True, kw_only=True, alias="verify_ssl")
+    _timeout: Optional[httpx.Timeout] = attrs.field(default=None, kw_only=True, alias="timeout")
+    _verify_ssl: Union[str, bool, ssl.SSLContext] = attrs.field(default=True, kw_only=True, alias="verify_ssl")
     _follow_redirects: bool = attrs.field(default=False, kw_only=True, alias="follow_redirects")
     _httpx_args: dict[str, Any] = attrs.field(factory=dict, kw_only=True, alias="httpx_args")
-    _client: httpx.Client | None = attrs.field(default=None, init=False)
-    _async_client: httpx.AsyncClient | None = attrs.field(default=None, init=False)
+    _client: Optional[httpx.Client] = attrs.field(default=None, init=False)
+    _async_client: Optional[httpx.AsyncClient] = attrs.field(default=None, init=False)
 
     def set_base_url(self, base_url: str) -> Self:
         """Update the base_url for this Client."""

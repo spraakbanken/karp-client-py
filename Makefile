@@ -166,3 +166,6 @@ snapshot-update:
 	${INVENV} pytest --snapshot-update
 
 ### === project targets below this line ===
+
+generate-ci-workflow:
+	cue cmd regenerate ./internal/ci/github

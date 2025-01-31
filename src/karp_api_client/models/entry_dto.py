@@ -1,6 +1,6 @@
 """EntryDto model."""
 
-from typing import TYPE_CHECKING, Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -35,8 +35,8 @@ class EntryDto:
     last_modified_by: str
     resource: str
     entry: "EntryDtoEntry"
-    message: Unset | str | None = UNSET
-    discarded: Unset | bool = False
+    message: Union[Unset, str, None] = UNSET
+    discarded: Union[Unset, bool] = False
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -53,7 +53,7 @@ class EntryDto:
 
         entry = self.entry.to_dict()
 
-        message: Unset | str | None
+        message: Union[Unset, str, None]
         message = UNSET if isinstance(self.message, Unset) else self.message
 
         discarded = self.discarded
@@ -95,12 +95,12 @@ class EntryDto:
 
         entry = EntryDtoEntry.from_dict(d.pop("entry"))
 
-        def _parse_message(data: object) -> Unset | str | None:
+        def _parse_message(data: object) -> Union[Unset, str, None]:
             if data is None:
                 return data
             if isinstance(data, Unset):
                 return data
-            return cast(Unset | str | None, data)
+            return cast(Union[Unset, str, None], data)
 
         message = _parse_message(d.pop("message", UNSET))
 

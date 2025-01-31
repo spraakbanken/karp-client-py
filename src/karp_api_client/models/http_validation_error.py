@@ -1,6 +1,6 @@
 """Http Validation Error."""
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -22,12 +22,12 @@ class HttpValidationError:
     detail (Union[Unset, list['ValidationError']]):
     """
 
-    detail: Unset | list["ValidationError"] = UNSET
+    detail: Union[Unset, list["ValidationError"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Serizalize this entity to dict."""
-        detail: Unset | list[dict[str, Any]] = UNSET
+        detail: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.detail, Unset):
             detail = []
             for detail_item_data in self.detail:

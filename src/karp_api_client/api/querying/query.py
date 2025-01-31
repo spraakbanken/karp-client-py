@@ -2,11 +2,12 @@
 
 from collections.abc import Sequence
 from http import HTTPStatus
-from typing import Any
+from typing import Any, Optional, Union
 from urllib import parse
 
 import attrs
 import httpx
+from httpx import codes
 from returns.result import Failure, Result, Success
 
 from karp_api_client import AuthenticatedClient, Client, dsl, errors
@@ -19,17 +20,17 @@ from karp_api_client.shared import Response
 class QueryOptions:
     """Options for adapting a Query."""
 
-    q: str | dsl.Query | None = attrs.field(default=None)
-    from_: int | None = attrs.field(default=None)
-    size: int | None = attrs.field(default=None)
-    sort: list[str] | None = attrs.field(default=None)
-    lexicon_stats: bool | None = attrs.field(default=None)
-    path: str | None = attrs.field(default=None)
-    highlight: bool | None = attrs.field(default=None)
+    q: Union[str, dsl.Query, None] = attrs.field(default=None)
+    from_: Optional[int] = attrs.field(default=None)
+    size: Optional[int] = attrs.field(default=None)
+    sort: Optional[list[str]] = attrs.field(default=None)
+    lexicon_stats: Optional[bool] = attrs.field(default=None)
+    path: Optional[str] = attrs.field(default=None)
+    highlight: Optional[bool] = attrs.field(default=None)
 
     def to_query_string(self) -> str:
         """Format this object as a query string."""
-        d: dict[str, int | str] = {}
+        d: dict[str, Union[int, str]] = {}
         if self.q:
             d["q"] = str(self.q)
         if self.from_:
@@ -51,11 +52,11 @@ class QueryOptions:
 
 
 def query_sync(
-    resources: str | Sequence[str],
+    resources: Union[str, Sequence[str]],
     *,
-    client: Client | AuthenticatedClient,
-    query_options: QueryOptions | None = None,
-) -> Result[Response[QueryResponse], Response[HttpValidationError | None]]:
+    client: Union[Client, AuthenticatedClient],
+    query_options: Optional[QueryOptions] = None,
+) -> Result[Response[QueryResponse], Response[Optional[HttpValidationError]]]:
     """Query.
 
     Args:
@@ -81,11 +82,11 @@ def query_sync(
 
 
 async def query_async(
-    resources: str | Sequence[str],
+    resources: Union[str, Sequence[str]],
     *,
-    client: Client | AuthenticatedClient,
-    query_options: QueryOptions | None = None,
-) -> Result[Response[QueryResponse], Response[HttpValidationError | None]]:
+    client: Union[Client, AuthenticatedClient],
+    query_options: Optional[QueryOptions] = None,
+) -> Result[Response[QueryResponse], Response[Optional[HttpValidationError]]]:
     """Query.
 
     Args:
@@ -110,7 +111,7 @@ async def query_async(
     return _build_query_response(client=client, response=response)
 
 
-def _get_query_kwargs(resources: Sequence[str] | str, *, query_options: QueryOptions | None) -> dict[str, Any]:
+def _get_query_kwargs(resources: Union[Sequence[str], str], *, query_options: Optional[QueryOptions]) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
     resources_ = resources if isinstance(resources, str) else ",".join(resources)
@@ -125,8 +126,8 @@ def _get_query_kwargs(resources: Sequence[str] | str, *, query_options: QueryOpt
 
 
 def _build_query_response(
-    *, client: Client | AuthenticatedClient, response: httpx.Response
-) -> Result[Response[QueryResponse], Response[HttpValidationError | None]]:
+    *, client: Union[Client, AuthenticatedClient], response: httpx.Response
+) -> Result[Response[QueryResponse], Response[Optional[HttpValidationError]]]:
     return (
         _parse_query_response(client=client, response=response)
         .map(
@@ -149,17 +150,15 @@ def _build_query_response(
 
 
 def _parse_query_response(
-    *, client: Client | AuthenticatedClient, response: httpx.Response
-) -> Result[QueryResponse, HttpValidationError | None]:
-    match response.status_code:
-        case 200:
-            response_200 = QueryResponse.from_dict(response.json())
+    *, client: Union[Client, AuthenticatedClient], response: httpx.Response
+) -> Result[QueryResponse, Optional[HttpValidationError]]:
+    if response.status_code == codes.OK:
+        response_200 = QueryResponse.from_dict(response.json())
 
-            return Success(response_200)
-        case 422:
-            response_422 = HttpValidationError.from_dict(response.json())
-            return Failure(response_422)
-        case _:
-            if client.raise_on_unexpected_status:
-                raise errors.UnexpectedStatus(response.status_code, response.content)
-            return Failure(None)
+        return Success(response_200)
+    if response.status_code == codes.UNPROCESSABLE_ENTITY:
+        response_422 = HttpValidationError.from_dict(response.json())
+        return Failure(response_422)
+    if client.raise_on_unexpected_status:
+        raise errors.UnexpectedStatus(response.status_code, response.content)
+    return Failure(None)

@@ -16,14 +16,14 @@ workflows: release: {
 	}
 	permissions: contents: "read"
 	env: {
-		MINIMUM_PYTHON_VERSION: "3.9"
+		MINIMUM_PYTHON_VERSION: "\(_min_py_version)"
 		UV_VERSION:             "0.5.15"
 	}
 	jobs: {
 		build: {
 
 			// This action builds distribution files for upload to PyPI
-			name:      "ubuntu / 3.9 / build"
+			name:      "ubuntu / \(_min_py_version) / build"
 			"runs-on": "ubuntu-latest"
 			steps: [{
 				//----------------------------------------------
@@ -75,7 +75,7 @@ workflows: release: {
 
 			// This action runs the test suite on the built artifact in the `build` action.
 			// The default is to run this in ubuntu, macos and windows
-			name: "${{ matrix.os }} / 3.9 / test built artifact"
+			name: "${{ matrix.os }} / \(_min_py_version) / test built artifact"
 			needs: ["build"]
 			strategy: {
 				"fail-fast": false

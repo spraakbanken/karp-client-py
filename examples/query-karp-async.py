@@ -1,6 +1,6 @@
 """Example of using this library in async code."""
 
-from typing import TypeVar
+from typing import Optional, TypeVar
 
 import anyio
 from returns.interfaces.specific.ioresult import IOResultLike2
@@ -48,7 +48,7 @@ async def main() -> None:  # noqa: D103
                 print(f"Error occurred!\n{err}")  # noqa: T201
 
 
-def _print_table(response: QueryResponse | None) -> None:
+def _print_table(response: Optional[QueryResponse]) -> None:
     if response is None:
         print("No response")  # noqa: T201
         return

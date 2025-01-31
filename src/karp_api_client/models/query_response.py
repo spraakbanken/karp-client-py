@@ -1,6 +1,6 @@
 """Query Response."""
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, Optional, TypeVar
 
 import attrs
 
@@ -16,7 +16,7 @@ class QueryResponse:
 
     total: int
     hits: list["EntryDto"]
-    distribution: dict[str, int] | None
+    distribution: Optional[dict[str, int]]
     additional_properties: dict[str, Any] = attrs.field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:

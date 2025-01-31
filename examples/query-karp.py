@@ -1,5 +1,7 @@
 """Example using this library in sync code."""
 
+from typing import Optional
+
 from returns.result import Failure, Success
 
 from karp_api_client import Client, dsl
@@ -24,7 +26,7 @@ def main() -> None:  # noqa: D103
                 print(f"Error occurred!\n{err}")  # noqa: T201
 
 
-def _print_table(response: QueryResponse | None) -> None:
+def _print_table(response: Optional[QueryResponse]) -> None:
     if response is None:
         print("No response")  # noqa: T201
         return

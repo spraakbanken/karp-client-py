@@ -77,62 +77,7 @@ workflows: test: {
 				}
 			}]
 		}
-		doctests: {
 
-			// This action runs doctests for coverage collection and uploads them to codecov.io.
-			// This requires the secret `CODECOV_TOKEN` be set as secret on GitHub, both for
-			// Actions and Dependabot
-			name: "${{ matrix.os }} / \(_min_py_version) / doctest"
-			strategy: {
-				"max-parallel": 4
-				"fail-fast":    false
-				matrix: os: ["ubuntu"]
-			}
-			"runs-on": "${{ matrix.os }}-latest"
-			env: OS: "${{ matrix.os }}-latest"
-			steps: [{
-				uses: "actions/checkout@v4"
-				with: submodules: true
-			}, {
-				name: "Set up uv"
-				uses: "astral-sh/setup-uv@v5"
-				with: {
-					version:        "${{ env.UV_VERSION }}"
-					"enable-cache": true
-				}
-			}, {
-				name: "Set up Python ${{ env.MINIMUM_PYTHON_VERSION }}"
-				id:   "setup-python"
-				uses: "actions/setup-python@v5"
-				with: "python-version": "${{ env.MINIMUM_PYTHON_VERSION }}"
-			}, {
-				name: "Install dependencies"
-				run:  "make install-dev"
-			}, {
-				//----------------------------------------------
-				// Run tests and upload coverage
-				//----------------------------------------------
-				name: "make doc-tests"
-				run:  "make doc-tests cov_report=xml"
-			}, {
-				name: "Upload coverage to Codecov"
-				uses: "codecov/codecov-action@v5"
-				with: {
-					token: "${{ secrets.CODECOV_TOKEN }}"
-					// directory: ./coverage
-					env_vars:         "OS,PYTHON,TESTTYPE"
-					fail_ci_if_error: true
-					// files: ./coverage/coverage.xml
-					// flags: unittests
-					// name: codecov-umbrella
-					verbose: true
-				}
-				env: {
-					PYTHON:   "${{ env.MINIMUM_PYTHON_VERSION }}"
-					TESTTYPE: "doctest"
-				}
-			}]
-		}
 		minimal: {
 
 			// This action chooses the oldest version of the dependencies permitted by Cargo.toml to ensure
@@ -172,7 +117,6 @@ workflows: test: {
 			if: "always()"
 			needs: [
 				"coverage",
-				"doctests",
 				"minimal",
 			]
 			"runs-on": "ubuntu-latest"

@@ -101,13 +101,13 @@ workflows: release: {
 					path: "dist"
 				}
 			}, {
-				run: "rm -r <INSERT PROJECT SRC>"
+				run: "rm -r src"
 			}, {
 				run: "pip install typing-extensions"
 			}, {
 				run: "pip install -r tests/requirements-testing.lock"
 			}, {
-				run: "pip install <INSERT PROJECT NAME> --no-index --no-deps --find-links dist --force-reinstall"
+				run: "pip install karp-api-client --no-index --no-deps --find-links dist --force-reinstall"
 			}, {
 				run: "pytest"
 			}]

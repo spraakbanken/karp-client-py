@@ -3,8 +3,12 @@
 import os
 import ssl
 import typing
-from typing import Any, Self, TypeVar
+from typing import Any, TypeVar
 
+try:
+    from typing import Self  # type: ignore [attr-defined]
+except ImportError:
+    from typing_extensions import Self
 import attrs
 import httpx
 

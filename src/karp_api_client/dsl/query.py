@@ -2,7 +2,12 @@
 
 import copy
 from collections.abc import Callable
-from typing import Any, ClassVar, Self
+from typing import Any, ClassVar
+
+try:
+    from typing import Self  # type: ignore [attr-defined]
+except ImportError:
+    from typing_extensions import Self
 
 
 class Query:

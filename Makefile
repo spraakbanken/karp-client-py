@@ -58,7 +58,7 @@ help:
 
 PLATFORM := `uname -o`
 REPO := spraakbanken/karp-api-client-py
-PROJECT_SRC := src/karp-api-client-py
+PROJECT_SRC := src/karp_api_client
 
 ifeq (${VIRTUAL_ENV},)
   VENV_NAME = .venv
@@ -110,7 +110,7 @@ doc-tests:
 .PHONY: type-check
 # check types
 type-check:
-	${INVENV} mypy ${PROJECT_SRC} ${tests}
+	${INVENV} mypy ${PROJECT_SRC} ${tests} examples
 
 .PHONY: lint
 # lint the code
@@ -166,3 +166,6 @@ snapshot-update:
 	${INVENV} pytest --snapshot-update
 
 ### === project targets below this line ===
+
+generate-ci-workflow:
+	cue cmd regenerate ./internal/ci/github

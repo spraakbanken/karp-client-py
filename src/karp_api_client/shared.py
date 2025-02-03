@@ -1,5 +1,8 @@
+"""Utility types."""
+
+from collections.abc import MutableMapping
 from http import HTTPStatus
-from typing import Generic, Literal, MutableMapping, Optional, TypeVar
+from typing import Generic, Literal, Optional, TypeVar
 
 import attrs
 
@@ -21,7 +24,7 @@ T = TypeVar("T")
 
 @attrs.define
 class Response(Generic[T]):
-    """A response from an endpoint"""
+    """A response from an endpoint."""
 
     status_code: HTTPStatus
     content: bytes

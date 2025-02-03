@@ -1,3 +1,4 @@
+"""Karp query DSL."""
 
 from .query import Equals, Query
 

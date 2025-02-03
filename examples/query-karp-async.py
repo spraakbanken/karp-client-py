@@ -40,7 +40,7 @@ async def main() -> None:  # noqa: D103
             client=client,
             query_options=querying.QueryOptions(size=25, q=q),
         )
-        response.map(_print_table).lash(lambda err: print(f"Error occurred!\n{err}"))
+        response.map(_print_table).alt(lambda err: print(f"Error occurred!\n{err}"))  # noqa: T201
 
 
 def _print_table(response: Response) -> None:

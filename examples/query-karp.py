@@ -1,7 +1,10 @@
 """Example using this library in sync code."""
 
+from typing import Optional
+
 from karp_api_client import Client, dsl
 from karp_api_client.api import querying
+from karp_api_client.models.http_validation_error import HttpValidationError
 from karp_api_client.shared import Response
 
 
@@ -15,7 +18,7 @@ def main() -> None:  # noqa: D103
             client=client,
             query_options=querying.QueryOptions(size=25, q=q),
         )
-        response.map(_print_table).lash(lambda err: print(f"Error occurred!\n{err}"))
+        response.map(_print_table).alt(_print_error)
         # match response:
         #     case Success(resp):
         #         _print_table(resp.parsed)
@@ -24,7 +27,6 @@ def main() -> None:  # noqa: D103
 
 
 def _print_table(response: Response) -> None:
-    print(f"{response=}")
     if response.parsed is None:
         print("No response")  # noqa: T201
         return
@@ -34,6 +36,10 @@ def _print_table(response: Response) -> None:
 
     print("---")  # noqa: T201
     print(f"showing {len(response.parsed.hits)} entries of {response.parsed.total} in total.")  # noqa: T201
+
+
+def _print_error(err: Response[Optional[HttpValidationError]]) -> None:
+    print(f"Error occurred!\n{err}")  # noqa: T201
 
 
 if __name__ == "__main__":

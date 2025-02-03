@@ -110,7 +110,7 @@ doc-tests:
 .PHONY: type-check
 # check types
 type-check:
-	${INVENV} mypy ${PROJECT_SRC} ${tests}
+	${INVENV} mypy ${PROJECT_SRC} ${tests} examples
 
 .PHONY: lint
 # lint the code

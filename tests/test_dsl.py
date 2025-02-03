@@ -1,4 +1,4 @@
-from karp_api_client.dsl import Equals
+from karp_api_client.dsl import Equals, Or
 
 
 def test_dsl(snapshot) -> None:  # noqa: ANN001
@@ -7,3 +7,9 @@ def test_dsl(snapshot) -> None:  # noqa: ANN001
     actual = str(q)
 
     assert actual == snapshot
+
+
+def test_empty_or() -> None:
+    q = Or()
+
+    assert q.ors == []

@@ -79,9 +79,9 @@ class Or(Query):
 
     _param_defs: ClassVar[dict[str, dict[str, Union[str, bool]]]] = {"ors": {"type": "query", "multi": True}}
 
-    def __init__(self, first: Query, second: Query) -> None:
+    def __init__(self, *queries: Query) -> None:
         """Construct an Or query by combining two queries."""
-        super().__init__(ors=[first, second])
+        super().__init__(ors=list(queries))
 
     def __or__(self, other: "Query") -> "Query":
         """Combine other query with or."""

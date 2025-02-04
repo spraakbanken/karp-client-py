@@ -4,6 +4,8 @@ import copy
 from collections.abc import Callable
 from typing import Any, ClassVar, Union
 
+from karp_api_client.shared import UNSET, Unset
+
 try:
     from typing import Self  # type: ignore [attr-defined]
 except ImportError:
@@ -62,12 +64,11 @@ class Equals(Query):
         "value": {"type": "query", "multi": False},
     }
 
-    def __init__(self, *, field: str, value: str) -> None:
+    def __init__(self, _field: Union[str, Unset] = UNSET, _value: Union[str, Unset] = UNSET, **kwargs: Any) -> None:
         """Constuct a Equals query."""
-        super().__init__(
-            field=field,
-            value=value,
-        )
+        if _field is not UNSET:
+            kwargs[str(_field)] = _value
+        super().__init__(**kwargs)
 
     def __str__(self) -> str:
         """Format this query as the Karp Api."""

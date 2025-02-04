@@ -2,3 +2,6 @@
 # name: test_dsl
   'or(equals|baseform|agha||equals|baseform|agin)'
 # ---
+# name: test_equals_combined
+  'or(equals|baseform|agha||equals|baseform|agin)'
+# ---

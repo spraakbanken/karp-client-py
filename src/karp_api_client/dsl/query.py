@@ -84,7 +84,7 @@ class Or(Query):
         """Construct an Or query by combining two queries."""
         super().__init__(ors=list(queries))
 
-    def __or__(self, other: "Query") -> "Query":
+    def __or__(self, other: "Query") -> "Or":
         """Combine other query with or."""
         q = self._clone()
         if isinstance(other, Or):

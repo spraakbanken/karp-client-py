@@ -24,3 +24,12 @@ dev = [
     "ruff>=0.9.2",
     "syrupy>=4.8.1",
 ]
+
+[project.scripts]
+karp-client = "karp_api_client.cli:app"
+
+[project.optional-dependencies]
+cli = [
+    "json-arrays>=0.15.0",
+    "typer>=0.15.1",
+]
